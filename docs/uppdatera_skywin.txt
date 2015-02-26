@@ -1,0 +1,98 @@
+                                                                     
+                                                                     
+                                                                     
+                                             
+MS Access to MySQL = http://www.bullzip.com/products/a2m/info.php
+
+Se till att MySQL-servern har lower_case satt till 1
+Se till att databaser skapas med DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_swedish_ci;
+i mysql.cnf:
+[mysqld]
+character-set-server=utf8
+collation-server=utf8_swedish_ci
+lower_case_table_names=1
+
+
+create database web DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_swedish_ci;
+create database skywin DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_swedish_ci;
+
+Ställ in query_cache osv
+
+
+Uppdatera till Skywin 13.3 - låt den uppdatera databasen
+
+Kör http://skywin.se/_files/sql_ddl/MySQL.133.ddl.table_create.sql
+
+Kör MS access to MySQL. Allt utom _nr ska med
+Avmarkera:
+ Drop and recreate
+ Transfer indexes
+ Create tables
+ Default value
+ Auto number
+
+Kör http://skywin.se/_files/sql_ddl/MySQL.133.ddl.fk_create.sql
+
+SET SQL_SAFE_UPDATES=0;
+DELETE FROM `intDbinfo`;
+DELETE FROM `intDbupdate`;
+UPDATE club SET InUse = 'Y';
+UPDATE typestudentjumprow SET Wage = 0.0, Rent = 0.0;
+
+INSERT
+INTO `intDbinfo` (`Dbversion`, `StatFromdate`, `StatTodate`, `StatMaxage`, `Userid`, `LastUpd`,      `LastUpdCredit`, `LastUpdMemberlist`)
+    VALUES       ('13.3.0',      null,           null,         0,           'Auto',   '2013-01-01',   '2013-01-01',    '2013-01-01');
+
+-- Store version updates
+INSERT INTO `intDbupdate` (`Dbversion`,`Userid`,`LastUpd`) VALUES ('9.2.3','SkyWin-script',Now());
+INSERT INTO `intDbupdate` (`Dbversion`,`Userid`,`LastUpd`) VALUES ('9.2.4','SkyWin-script',Now());
+INSERT INTO `intDbupdate` (`Dbversion`,`Userid`,`LastUpd`) VALUES ('13.1.0','SkyWin-script', Now());
+INSERT INTO `intDbupdate` (`Dbversion`,`Userid`,`LastUpd`) VALUES ('13.2','SkyWin-script', Now());
+INSERT INTO `intDbupdate` (`Dbversion`,`Userid`,`LastUpd`) VALUES ('13.3','SkyWin-script', Now());
+
+Flytta undan den gamla mdb-filen, starta Skywin, ställ in ADO-källan och låt den uppdatera databasen.
+
+
+---- Webbsida
+
+Installera MySQL ODBC (jag körde både 32 och 64 bitars)
+
+Använd MS Access to MySQL på LFK2 och Tandembokning
+Låt alla inställningar vara ikryssade (även drop database) och kör LFK2 först men SKIPPA Användare.
+När den är klar gå tillbaka och kör Användare utan drop database. (bug i MS Access to MySQL)
+
+Kör tandem utan drop database (också i web).
+
+USE web;
+
+CREATE VIEW web.PersonInfo AS 
+  SELECT Member.*, Home.PhoneNo AS HomePhone, Work.PhoneNo AS WorkPhone, Mobile.PhoneNo AS MobilePhone
+  FROM ((skywin.Member LEFT JOIN skywin.Memberphone AS Home ON Member.InternalNo = Home.InternalNo AND Home.PhoneType='B') 
+  LEFT JOIN skywin.Memberphone AS `Work` ON Member.InternalNo = Work.InternalNo AND Work.PhoneType='A') 
+  LEFT JOIN skywin.Memberphone AS Mobile ON Member.InternalNo = Mobile.InternalNo AND Mobile.PhoneType='M';
+
+CREATE VIEW web.schemanamn as SELECT s.*, 
+  concat(HL.Firstname,' ',HL.LastName) AS hlnamn, 
+  concat(HM.Firstname,' ',HM.LastName) AS hmnamn, 
+  concat(Manifest.FirstName,' ',Manifest.Lastname) AS Manifestnamn, 
+  concat(Pilot1.FirstName,' ',Pilot1.LastName) AS pilot1namn, 
+  concat(Pilot2.FirstName,' ',Pilot2.LastName) AS pilot2namn, 
+  concat(Pilot3.FirstName,' ',Pilot3.LastName) AS pilot3namn, 
+  concat(Pilot4.FirstName,' ',Pilot4.LastName) AS pilot4namn
+FROM ((((((`Schema` as s LEFT JOIN skywin.Member AS HL ON s.HL=HL.InternalNo) LEFT JOIN skywin.Member AS HM ON s.HM=HM.InternalNo) 
+	LEFT JOIN skywin.Member AS Manifest ON s.Manifest=Manifest.InternalNo) LEFT JOIN skywin.Member AS Pilot1 ON s.pilot1=Pilot1.InternalNo) 
+	LEFT JOIN skywin.Member AS Pilot2 ON s.pilot2=Pilot2.InternalNo) LEFT JOIN skywin.Member AS Pilot3 ON s.pilot3=Pilot3.InternalNo) 
+	LEFT JOIN skywin.Member AS Pilot4 ON s.pilot4=Pilot4.InternalNo;
+
+CREATE VIEW web.mittschema as SELECT Användare.namn, SchemaNamn.*
+  FROM Användare, SchemaNamn
+  WHERE Användare.InternalNo=SchemaNamn.manifest Or Användare.InternalNo=SchemaNamn.hl Or Användare.InternalNo=SchemaNamn.hm 
+     Or Användare.InternalNo=SchemaNamn.pilot1 Or Användare.InternalNo=SchemaNamn.pilot2 Or Användare.InternalNo=SchemaNamn.pilot3 
+     Or Användare.InternalNo=SchemaNamn.pilot4;
+
+
+CREATE VIEW web.Paminnelse AS SELECT s.Datum, s.Start, s.Slut, s.Fritext, concat(p.lastname,', ',p.firstname) AS Namn, p.Emailaddress, p.InternalNo
+FROM `Schema` AS s, skywin.Member AS p
+WHERE (p.InternalNo=s.HL Or p.InternalNo=s.HM Or p.InternalNo=s.Manifest Or p.InternalNo=s.pilot1 Or p.InternalNo=s.pilot2 Or p.InternalNo=s.pilot3
+ Or p.InternalNo=s.pilot4) And ((DateDiff(Now(),s.datum)>=0) And (DateDiff(Now(),s.datum)<=14))
+ORDER BY p.LastName, p.FirstName;

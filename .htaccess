@@ -1,0 +1,11 @@
+RewriteEngine On
+RewriteBase /lfk-manifest/
+RewriteRule ^$ index.php?page=overview [L]
+RewriteRule ^wish-([0-9]+)$ index.php?page=wish&book=$1 [L]
+RewriteRule ^([a-z]+)$ index.php?page=$1 [L]
+
+AddDefaultCharset utf-8
+
+<filesMatch ".js$">
+ForceType 'text/javascript; charset=UTF-8'
+</filesMatch>
