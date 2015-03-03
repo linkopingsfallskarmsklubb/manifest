@@ -61,13 +61,15 @@ function upload_database() {
    $min = (int)date('i');
    
    if ($oldmin != $min) {
-     if ($min % 5 == 0) {
+     // This is all offset by 3 min to allow the weather station
+     // to finish the download
+     if ($min % 5 == 3) {
        echo "5 min, uploading weather information: ";
        upload_weather();
        echo "Done\n";
      }
      
-     if ($min == 0) {
+     if ($min == 3) {
        echo "Whole hour, uploading database: ";
        upload_database();
        echo "Done\n";
