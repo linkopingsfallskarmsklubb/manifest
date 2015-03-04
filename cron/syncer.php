@@ -20,7 +20,7 @@ function upload_data($url, $data) {
 
 function upload_weather() {
   $data = array('dump' => '@D:\vader\downld02.txt');
-  upload_data('https://dev.linkopingsfallskarmsklubb.se/templates/lfk/api/weather.php', $data);
+  upload_data('https://linkopingsfallskarmsklubb.se/templates/lfk/api/weather.php', $data);
 }
 
 function upload_database() {
@@ -48,7 +48,7 @@ function upload_database() {
   }
 
   $data = array('dump' => '@' . $temp);
-  upload_data('https://dev.linkopingsfallskarmsklubb.se/templates/lfk/api/import.php', $data);
+  upload_data('https://linkopingsfallskarmsklubb.se/templates/lfk/api/import.php', $data);
   unlink($temp);
  }
  
