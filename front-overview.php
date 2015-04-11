@@ -117,10 +117,13 @@ function drawChart() {
       max = 0.0;
       mean = 0.0;
       nmean = 0;
+      skipped = 0;
       for(idx in weather) {
         row = weather[idx];
-        if(limit > row.time)
+        if(limit > row.time) {
+          skipped++;
           continue;
+        }
         
         lmax = parseFloat(row.wind.max);
         lmean = parseFloat(row.wind.mean);
@@ -132,8 +135,12 @@ function drawChart() {
         nmean++;
       }
       /* do not paint empty data */
-      if(nmean == 0)
+      if(nmean == 0) {
+        if (skipped > 0) {
+          $("#no-weather-data").text('Väderdatan är för gammal, kontrollera väderstationen');
+        }
         return;
+      }
 
       graphMax = max + 1.0;
       if(graphMax < 5.0) {
@@ -194,7 +201,11 @@ function update_wdir(weather) {
   
   gnd_speed = weather.station[idx].wind.mean;
   gnd_temp = weather.station[idx].temperature;
-  gnd_dir = weather.station[idx].wind.direction;
+  if (weather.station[idx].wind.direction != null) {
+    gnd_dir = weather.station[idx].wind.direction;
+  } else {
+    gnd_dir = "???";
+  }
   
   altitudes = [];
   for(altitude in weather.lfv) {
