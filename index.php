@@ -9,9 +9,6 @@ include("cacheable.php");
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="jquery-ui-1.8.23.custom/css/ui-lightness/jquery-ui-1.8.23.custom.css" rel="stylesheet">
     <style type="text/css">
-      body {
-        padding-bottom: 40px;
-      }
       .waiting-circles{ padding: 0; display: inline-block; 
           position: relative; width: 60px; height: 60px;}
       .waiting-circles-element{ margin: 0 2px 0 0; background-color: #e4e4e4; 
@@ -21,6 +18,15 @@ include("cacheable.php");
       .waiting-circles-play-0{ background-color: #9ec45f; }
       .waiting-circles-play-1{ background-color: #aed46f; }
       .waiting-circles-play-2{ background-color: #bee47f; }
+      hr {
+        margin: 0;
+      }
+      .slidesjs-next {
+        float: right;
+      }
+      .slidesjs-next, .slidesjs-previous {
+        color: #cccccc;
+      }
     </style>
     <script src="jquery-ui-1.8.23.custom/js/jquery-1.8.0.min.js"></script>
     <script src="jquery-ui-1.8.23.custom/js/jquery-ui-1.8.23.custom.min.js"></script>

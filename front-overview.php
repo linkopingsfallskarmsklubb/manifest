@@ -284,11 +284,20 @@ $(function() {
       active: true,
       auto: true,
       interval: 20000,
-      swap: true
+      swap: true,
     },
     callback: {
       loaded: function(){
-        $('.slidesjs-navigation').hide(0);
+        $('.slidesjs-play').hide(0);
+        $('.slidesjs-stop').hide(0);
+        $('.slidesjs-next').text('>').click(function() {
+          $('.slidesjs-play').click();
+          $('.slidesjs-stop').hide(0);
+        });
+        $('.slidesjs-previous').text('<').click(function() {
+          $('.slidesjs-play').click();
+          $('.slidesjs-stop').hide(0);
+        });
       }
     }
   });
