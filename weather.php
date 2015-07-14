@@ -1,5 +1,6 @@
 <?php
 function realdegrees($in) {
+  $wd_deg = null;
   switch ($in) {
     case "N":   { $wd_deg = 0; break; }
     case "NNE": { $wd_deg = 22; break; }
