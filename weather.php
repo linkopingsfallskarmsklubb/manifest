@@ -22,9 +22,10 @@ function realdegrees($in) {
 }
 
 $data = file_get_contents("D:\\vader\\downld02.txt");
-$lfv_data = file_get_contents("http://www.lfv.se/MetInfo.asp?TextFile=llf.essa-s.txt&Subtitle=Omr%e5de%A0B%A0-%A0S%F6dra%A0delen&T=Omr%e5de%A0B%A0-%A0Mellersta%A0Sverige&Frequency=60");
-$lfv_data = strip_tags($lfv_data);
+$lfv_data = file_get_contents("https://www.aro.lfv.se/Links/Link/ViewLink?TorLinkId=308&type=MET");
 
+$lfv_data = strstr($lfv_data, "S&#246;dra delen</h1>");
+$lfv_data = strip_tags($lfv_data);
 preg_match_all('/I hela omr.*: ([0-9]{3})\/([0-9]+)kt ([-+][0-9]+)/', $lfv_data, $lfv_matches); 
 
 $data = preg_replace('/[ ]+/', ' ', $data);
