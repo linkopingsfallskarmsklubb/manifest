@@ -23,7 +23,7 @@ function realdegrees($in) {
 }
 
 $data = file_get_contents("D:\\vader\\downld02.txt");
-$lfv_data = file_get_contents("https://www.aro.lfv.se/Links/Link/ViewLink?TorLinkId=308&type=MET");
+$lfv_data = file_get_contents("D:\\vader\\lfv-weather.html");
 
 $lfv_data = strstr($lfv_data, "S&#246;dra delen</h1>");
 $lfv_data = strip_tags($lfv_data);
