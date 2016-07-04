@@ -22,8 +22,8 @@ function realdegrees($in) {
   return $wd_deg;
 }
 
-$data = file_get_contents("D:\\vader\\downld02.txt");
-$lfv_data = file_get_contents("D:\\vader\\lfv-weather.html");
+$data = file_get_contents("D:\\vader\\downld02.txt"); // Is created every 5 minutes by weatherlink
+$lfv_data = file_get_contents("D:\\vader\\lfv-weather.html"); // Is fetched every 15 minutes by a scheduled task running cron/lfv.py 
 
 $lfv_data = strstr($lfv_data, "S&#246;dra delen</h1>");
 $lfv_data = strip_tags($lfv_data);
