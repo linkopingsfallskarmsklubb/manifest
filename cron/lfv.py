@@ -8,4 +8,4 @@ if site.status_code is 200:
         f = open('D:/vader/lfv-weather.html', 'w')
         f.write(site.text)
     except:
-        continue
+        pass
