@@ -50,8 +50,6 @@ for($i = 3; $i < count($data); $i++) {
                     "direction" => $wind_dir));
 }
 
-print_r($lfv_matches);
-
 $lfv = null;
 if (count($lfv_matches[2]) !== 0) {
   $lfv = array(
