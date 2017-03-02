@@ -27,7 +27,8 @@ $lfv_data = file_get_contents("D:\\vader\\lfv-weather.html"); // Is fetched ever
 
 $lfv_data = strstr($lfv_data, "S&#246;dra delen</h1>");
 $lfv_data = strip_tags($lfv_data);
-preg_match_all('/.*UTC: ([0-9]{3})\/([0-9]+)kt ([-+][0-9]+)/', $lfv_data, $lfv_matches); 
+$utc_hour = gmdate('H');
+preg_match_all('/.*' . $utc_hour . '-.*UTC: ([0-9]{3})\/([0-9]+)kt ([-+][0-9]+)/', $lfv_data, $lfv_matches); 
 
 $data = preg_replace('/[ ]+/', ' ', $data);
 $data = explode("\n", $data);
@@ -49,29 +50,20 @@ for($i = 3; $i < count($data); $i++) {
                     "direction" => $wind_dir));
 }
 
+print_r($lfv_matches);
+
 $lfv = null;
 if (count($lfv_matches[2]) !== 0) {
-  $utc_hour = (int)gmdate('H');
-  $adder = 0;
-  if ($utc_hour > 11) {
-    $adder += 1;
-  }
-  if ($utc_hour > 13) {
-    $adder += 1;
-  }
-  if ($utc_hour > 15) {
-    $adder += 1;
-  }
   $lfv = array(
-    "3000" => array("speed" => round($lfv_matches[2][8 + $adder] * 0.514), 
-                    "direction" => (int)$lfv_matches[1][8 + $adder], 
-                    "temperature" => (int)$lfv_matches[3][8 + $adder]),
-    "1500" => array("speed" => round($lfv_matches[2][4 + $adder] * 0.514), 
-                    "direction" => (int)$lfv_matches[1][4 + $adder], 
-                    "temperature" => (int)$lfv_matches[3][4 + $adder]),
-    "600" => array("speed" => round($lfv_matches[2][0 + $adder] * 0.514), 
-                    "direction" => (int)$lfv_matches[1][0 + $adder], 
-                    "temperature" => (int)$lfv_matches[3][0 + $adder]));
+    "3000" => array("speed" => round($lfv_matches[2][2] * 0.514), 
+                    "direction" => (int)$lfv_matches[1][2], 
+                    "temperature" => (int)$lfv_matches[3][2]),
+    "1500" => array("speed" => round($lfv_matches[2][1] * 0.514), 
+                    "direction" => (int)$lfv_matches[1][1], 
+                    "temperature" => (int)$lfv_matches[3][1]),
+    "600" => array("speed" => round($lfv_matches[2][0] * 0.514), 
+                    "direction" => (int)$lfv_matches[1][0], 
+                    "temperature" => (int)$lfv_matches[3][0]));
 }
 
 $offset = 60 * 5;
