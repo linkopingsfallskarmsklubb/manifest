@@ -27,7 +27,7 @@ $lfv_data = file_get_contents("D:\\vader\\lfv-weather.html"); // Is fetched ever
 
 $lfv_data = strstr($lfv_data, "S&#246;dra delen</h1>");
 $lfv_data = strip_tags($lfv_data);
-$utc_hour = gmdate('H');
+$utc_hour = gmdate('H') - (1 - gmdate('H') % 2);
 preg_match_all('/.*' . $utc_hour . '-.*UTC: ([0-9]{3})\/([0-9]+)kt ([-+][0-9]+)/', $lfv_data, $lfv_matches); 
 
 $data = preg_replace('/[ ]+/', ' ', $data);
