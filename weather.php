@@ -25,9 +25,10 @@ function realdegrees($in) {
 $data = file_get_contents("D:\\vader\\downld02.txt"); // Is created every 5 minutes by weatherlink
 $lfv_data = file_get_contents("D:\\vader\\lfv-weather.html"); // Is fetched every 15 minutes by a scheduled task running cron/lfv.py
 
+
 $lfv_data = strstr($lfv_data, "S&#246;dra delen</h1>");
 $lfv_data = strip_tags($lfv_data);
-preg_match_all('/([0-9]{2})-([0-9]{2})UTC: ([0-9]{3})\/([0-9]+)kt ([-+][0-9]+)/', $lfv_data, $lfv_matches);
+preg_match_all('/([0-9]{2})-([0-9]{2})UTC: ([0-9]+)\/([0-9]+)kt ([-+][0-9]+)/', $lfv_data, $lfv_matches);
 
 $data = preg_replace('/[ ]+/', ' ', $data);
 $data = explode("\n", $data);
