@@ -62,6 +62,10 @@ include("cacheable.php");
             <?php } ?>
                 <a href="wish">Liftkö</a></li>
               </li>
+              <li>
+                <a href="https://holfuy.com/en/weather/761" target="_blank">V&auml;derstation</a>
+              </li>
+              </li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>

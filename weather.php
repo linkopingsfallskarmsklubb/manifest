@@ -22,28 +22,21 @@ function realdegrees($in) {
   return $wd_deg;
 }
 
-$data = file_get_contents("D:\\vader\\downld02.txt"); // Is created every 5 minutes by weatherlink
-$lfv_data = file_get_contents("D:\\vader\\lfv-weather.html"); // Is fetched every 15 minutes by a scheduled task running cron/lfv.py
-
+$json = file_get_contents("https://api.holfuy.com/archive/?pw=***REMOVED***&s=761&su=m/s&mback=60");
+$lfv_data = file_get_contents("./lfv-weather.html"); // Is fetched every 60 minutes by a scheduled task running cron/lfv.py
 
 $lfv_data = strstr($lfv_data, "S&#246;dra delen</h1>");
 $lfv_data = strip_tags($lfv_data);
 preg_match_all('/([0-9]{2})-([0-9]{2})UTC: ([0-9]+)\/([0-9]+)kt ([-+][0-9]+)/', $lfv_data, $lfv_matches);
 
-$data = preg_replace('/[ ]+/', ' ', $data);
-$data = explode("\n", $data);
-for($i = 3; $i < count($data); $i++) {
-  $row = explode(" ", $data[$i]);
-  if(count($row) < 10)
-    continue;
+$data = json_decode($json, true);
 
-  if($row[2] == '---')
-    continue;
-  $time = strtotime("20".$row[0]." ".$row[1]);
-  $wind_mean = $row[7];
-  $wind_dir = realdegrees($row[8]);
-  $wind_max = $row[10];
-  $temp = round($row[2]);
+foreach($data["measurements"] as $item) { 
+  $time = strtotime($item['dateTime']);
+  $wind_mean = $item['wind']['speed'];
+  $wind_dir = $item['wind']['direction'];
+  $wind_max = $item['wind']['gust'];
+  $temp = round($item['temperature']);
   
   $result[] = array("time" => $time, "temperature" => $temp,
     "wind" => array("mean" => $wind_mean, "max" => $wind_max,
@@ -71,7 +64,7 @@ if (count($lfv_matches[2]) !== 0) {
                     "temperature" => (int)$lfv_result[0][2]));
 }
 
-$offset = 60 * 5;
+$offset = 60;
 header("Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT");
 header("Cache-Control: max-age=$offset, must-revalidate"); 
 echo json_encode(array("station" => $result, "lfv" => $lfv));
