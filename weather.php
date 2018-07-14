@@ -1,4 +1,7 @@
 <?php
+
+require_once 'config.php';
+
 function realdegrees($in) {
   $wd_deg = null;
   switch ($in) {
@@ -22,8 +25,8 @@ function realdegrees($in) {
   return $wd_deg;
 }
 
-$json = file_get_contents("https://api.holfuy.com/archive/?pw=***REMOVED***&s=761&su=m/s&mback=60");
-$lfv_data = file_get_contents("./lfv-weather.html"); // Is fetched every 60 minutes by a scheduled task running cron/lfv.py
+$json = file_get_contents("https://api.holfuy.com/archive/?pw=" . HOLFUY_PWD . "&s=761&su=m/s&mback=60");
+$lfv_data = file_get_contents("./cron/lfv-weather.html"); // Is fetched every 60 minutes by a scheduled task running cron/lfv.py
 
 $lfv_data = strstr($lfv_data, "S&#246;dra delen</h1>");
 $lfv_data = strip_tags($lfv_data);
