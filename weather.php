@@ -35,7 +35,7 @@ preg_match_all('/([0-9]{2})-([0-9]{2})UTC: ([0-9]+)\/([0-9]+)kt ([-+][0-9]+)/', 
 $data = json_decode($json, true);
 
 foreach($data["measurements"] as $item) { 
-  $time = strtotime($item['dateTime']);
+  $time = strtotime($item['dateTime'] . ' ' . 'Europe/Stockholm');
   $wind_mean = $item['wind']['speed'];
   $wind_dir = $item['wind']['direction'];
   $wind_max = $item['wind']['gust'];
