@@ -28,8 +28,11 @@ function realdegrees($in) {
 $json = file_get_contents("https://api.holfuy.com/archive/?pw=" . HOLFUY_PWD . "&s=761&su=m/s&mback=60");
 $lfv_data = file_get_contents("./cron/lfv-weather.html"); // Is fetched every 60 minutes by a scheduled task running cron/lfv.py
 
-$lfv_data = strstr($lfv_data, "S&#246;dra delen</h1>");
+$lfv_data = strstr($lfv_data, "Delomr&#229;de 4</h1>");
 $lfv_data = strip_tags($lfv_data);
+echo $lfv_data;
+
+
 preg_match_all('/([0-9]{2})-([0-9]{2})UTC: ([0-9]+)\/([0-9]+)kt ([-+][0-9]+)/', $lfv_data, $lfv_matches);
 
 $data = json_decode($json, true);
