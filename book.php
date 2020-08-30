@@ -80,7 +80,7 @@ if($_POST['edit'] === "true") {
     "InternalNo,TimeForRequest,JumpType,PlaneReg,".
     "Altitude,StudentJumpNo,CanopyId,Organizer,".
     "Computername,Userid,LastUpd,Validated,ReqAsGroup,Comment".
-    ") VALUES (?, NOW(), ?, ?, ?, ?, NULL, 'N', 'Web', 'Web', NOW(), 'Y', ?, ?)",
+    ") VALUES (?, NOW(), ?, ?, ?, ?, NULL, 'N', 'MANIFEST', 'Manifestor', NOW(), 'Y', ?, ?)",
     array($id, $jumptype, $aircraft, $altitude, $student, $group, $comment));
 }
 
